@@ -45,8 +45,8 @@ with st.sidebar:
 # ============================================================
 # MAIN HEADER
 # ============================================================
-st.title("EOI-to-PO Supplier Matching")
-st.markdown("Upload your POs and suppliers, then click **Run Matching** to get ranked results.")
+st.title("EOI Supplier Matching")
+st.markdown("Upload your Procurement Opportunity and EOI Suppliers, then click **Run Matching** to get ranked results.")
 
 st.markdown("---")
 
@@ -56,9 +56,9 @@ st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Purchase Orders")
+    st.subheader("Procurement Opportunity")
     po_file = st.file_uploader(
-        "Excel or CSV file with PO data",
+        "Excel or CSV file with Procurement Opportunity data",
         type=["xlsx", "csv"],
         key="po_upload"
     )
@@ -77,9 +77,9 @@ with col1:
         st.session_state['df_pos'] = df_pos
 
 with col2:
-    st.subheader("Suppliers")
+    st.subheader("EOI Suppliers")
     supplier_file = st.file_uploader(
-        "Excel or CSV file with supplier EOI data",
+        "Excel or CSV file with EOI Supplier data",
         type=["xlsx", "csv"],
         key="supplier_upload"
     )
@@ -105,7 +105,7 @@ st.markdown("---")
 files_ready = ('df_pos' in st.session_state) and ('df_suppliers' in st.session_state)
 
 if not files_ready:
-    st.info("Please upload both PO and supplier files to continue")
+    st.info("Please upload both Procurement Opportunity and EOI Supplier files to continue")
 else:
     if st.button("RUN MATCHING", type="primary", use_container_width=True):
         
@@ -124,7 +124,7 @@ else:
         po_code_col = None
         for col in df_pos.columns:
             col_upper = str(col).upper()
-            if any(x in col_upper for x in ["CODE", "PO CODE", "SUPPLIER CODE"]):
+            if any(x in col_upper for x in ["CODE", "PO CODE", "SUPPLIER CODE", "FOREIGN SUPPLIER CODE"]):
                 po_code_col = col
                 break
         if po_code_col is None:
@@ -163,7 +163,7 @@ else:
             st.error("No valid POs found after filtering.")
             st.stop()
         
-        st.write(f"Processing **{total_pos}** POs against **{len(df_suppliers)}** suppliers")
+        st.write(f"Processing **{total_pos}** Procurement Opportunities against **{len(df_suppliers)}** EOI Suppliers")
         
         # ====================================================
         # FAST MATCHING FUNCTION
