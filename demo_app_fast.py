@@ -69,9 +69,9 @@ with col1:
         else:
             df_pos = pd.read_csv(po_file)
         
-        st.success(f"Loaded {len(df_pos)} POs")
+        st.success(f"Loaded {len(df_pos)} Procurement Opportunities")
         
-        with st.expander("Preview PO data"):
+        with st.expander("Preview Procurement Opportunity data"):
             st.dataframe(df_pos.head(5), use_container_width=True)
         
         st.session_state['df_pos'] = df_pos
@@ -90,9 +90,9 @@ with col2:
         else:
             df_suppliers = pd.read_csv(supplier_file)
         
-        st.success(f"Loaded {len(df_suppliers)} suppliers")
+        st.success(f"Loaded {len(df_suppliers)} EOI Suppliers")
         
-        with st.expander("Preview supplier data"):
+        with st.expander("Preview EOI Supplier data"):
             st.dataframe(df_suppliers.head(5), use_container_width=True)
         
         st.session_state['df_suppliers'] = df_suppliers
@@ -160,7 +160,7 @@ else:
         total_pos = len(df_pos)
         
         if total_pos == 0:
-            st.error("No valid POs found after filtering.")
+            st.error("No valid Procurement Opportunities found after filtering.")
             st.stop()
         
         st.write(f"Processing **{total_pos}** Procurement Opportunities against **{len(df_suppliers)}** EOI Suppliers")
@@ -179,11 +179,11 @@ else:
                 for _, row in suppliers.head(50).iterrows()
             ])
             
-            prompt = f"""Match suppliers to PO. Rate 0-100. Return JSON.
+            prompt = f"""Match EOI suppliers to Procurement Opportunity. Rate 0-100. Return JSON.
 
-PO {po_code}: {po_text[:200]}
+Procurement Opportunity {po_code}: {po_text[:200]}
 
-SUPPLIERS:
+EOI SUPPLIERS:
 {supplier_text}
 
 Return 3-5 best matches:
