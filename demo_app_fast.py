@@ -222,19 +222,19 @@ Return 3-5 best matches:
             if matches:
                 for rank, match in enumerate(matches, 1):
                     all_results.append({
-                        "PO_Code": po_code,
+                        "Foreign Supplier Code": po_code,
                         "Rank": rank,
-                        "Supplier_ID": match.get("id", "N/A"),
-                        "Supplier_Name": match.get("name", "N/A"),
+                        "EOI Supplier ID": match.get("id", "N/A"),
+                        "EOI Supplier Name": match.get("name", "N/A"),
                         "Score": match.get("score", 0),
                         "Reason": match.get("reason", "")
                     })
             else:
                 all_results.append({
-                    "PO_Code": po_code,
+                    "Foreign Supplier Code": po_code,
                     "Rank": 1,
-                    "Supplier_ID": "N/A",
-                    "Supplier_Name": "No match",
+                    "EOI Supplier ID": "N/A",
+                    "EOI Supplier Name": "No match",
                     "Score": 0,
                     "Reason": "No suitable match found"
                 })
@@ -259,12 +259,12 @@ Return 3-5 best matches:
         
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Total POs", total_pos)
+            st.metric("Total Procurement Opportunities", total_pos)
         with col2:
-            matches_found = len(results_df[results_df["Supplier_ID"] != "N/A"])
+            matches_found = len(results_df[results_df["EOI Supplier ID"] != "N/A"])
             st.metric("Matches Found", matches_found)
         with col3:
-            avg = results_df[results_df["Supplier_ID"] != "N/A"]["Score"].mean() if matches_found > 0 else 0
+            avg = results_df[results_df["EOI Supplier ID"] != "N/A"]["Score"].mean() if matches_found > 0 else 0
             st.metric("Average Score", f"{avg:.0f}")
         
         # Display results

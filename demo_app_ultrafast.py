@@ -142,9 +142,9 @@ Return JSON with top matches per PO:
                 
                 for match in matches:
                     all_results.append({
-                        "PO_Code": match.get("po", "?"),
-                        "Supplier_ID": match.get("id", "N/A"),
-                        "Supplier_Name": match.get("name", "N/A"),
+                        "Foreign Supplier Code": match.get("po", "?"),
+                        "EOI Supplier ID": match.get("id", "N/A"),
+                        "EOI Supplier Name": match.get("name", "N/A"),
                         "Score": match.get("score", 0)
                     })
         
@@ -173,9 +173,9 @@ Return top 2 matches JSON: {{"matches": [{{"id":"...", "name":"...", "score":0-1
                     data = json.loads(response.choices[0].message.content)
                     for match in data.get("matches", []):
                         all_results.append({
-                            "PO_Code": po_code,
-                            "Supplier_ID": match.get("id", "N/A"),
-                            "Supplier_Name": match.get("name", "N/A"),
+                            "Foreign Supplier Code": po_code,
+                            "EOI Supplier ID": match.get("id", "N/A"),
+                            "EOI Supplier Name": match.get("name", "N/A"),
                             "Score": match.get("score", 0)
                         })
                 

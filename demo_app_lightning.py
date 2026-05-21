@@ -113,9 +113,9 @@ if ('df_pos' in st.session_state) and ('df_suppliers' in st.session_state) and s
             
             if score >= 30:  # Only keep decent matches
                 all_results.append({
-                    "PO_Code": po_code,
-                    "Supplier_ID": sup_id,
-                    "Supplier_Name": sup_name,
+                    "Foreign Supplier Code": po_code,
+                    "EOI Supplier ID": sup_id,
+                    "EOI Supplier Name": sup_name,
                     "Score": score,
                     "Method": "Keyword"
                 })
@@ -129,15 +129,15 @@ if ('df_pos' in st.session_state) and ('df_suppliers' in st.session_state) and s
     if all_results:
         # Get unique POs with low confidence
         results_df = pd.DataFrame(all_results)
-        low_conf = results_df[results_df["Score"] < 50]["PO_Code"].unique()[:5]  # Max 5 POs for AI
+        low_conf = results_df[results_df["Score"] < 50]["Foreign Supplier Code"].unique()[:5]  # Max 5 POs for AI
         
         ai_boost_count = 0
         for po_code in low_conf:
             po_row = df_pos[df_pos[po_code_col] == po_code].iloc[0]
             po_text = str(po_row[desc_col])[:150]
             
-            candidates = results_df[results_df["PO_Code"] == po_code].head(3)
-            cand_text = "\n".join([f"{r['Supplier_ID']}: {r['Supplier_Name']}" for _, r in candidates.iterrows()])
+            candidates = results_df[results_df["Foreign Supplier Code"] == po_code].head(3)
+            cand_text = "\n".join([f"{r['EOI Supplier ID']}: {r['EOI Supplier Name']}" for _, r in candidates.iterrows()])
             
             prompt = f"""Rate these suppliers for: {po_text}
             
@@ -158,8 +158,8 @@ Return JSON: {{"scores": [{{"id":"...", "boost": -20 to +20}}]}}"""
                 for score in data.get("scores", []):
                     sup_id = score.get("id")
                     boost = score.get("boost", 0)
-                    results_df.loc[results_df["Supplier_ID"] == sup_id, "Score"] = results_df.loc[results_df["Supplier_ID"] == sup_id, "Score"] + boost
-                    results_df.loc[results_df["Supplier_ID"] == sup_id, "Method"] = "AI-refined"
+                    results_df.loc[results_df["EOI Supplier ID"] == sup_id, "Score"] = results_df.loc[results_df["EOI Supplier ID"] == sup_id, "Score"] + boost
+                    results_df.loc[results_df["EOI Supplier ID"] == sup_id, "Method"] = "AI-refined"
                 
                 ai_boost_count += 1
             except:
@@ -183,7 +183,7 @@ Return JSON: {{"scores": [{{"id":"...", "boost": -20 to +20}}]}}"""
         with col2:
             st.metric("Avg Score", f"{results_df['Score'].mean():.0f}")
         with col3:
-            st.metric("POs Covered", results_df["PO_Code"].nunique())
+            st.metric("Procurement Opportunities Covered", results_df["Foreign Supplier Code"].nunique())
         
         st.dataframe(results_df, use_container_width=True)
         
